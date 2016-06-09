@@ -117,8 +117,6 @@ void ShowInfo() {
 }
 
 void serialCallBack(Stream& stream, char arrivedChar, unsigned short availableCharsCount) {
-	
-
 	if (arrivedChar == '\n') {
 		char str[availableCharsCount];
 		for (int i = 0; i < availableCharsCount; i++) {
@@ -192,7 +190,7 @@ void checkMQTTDisconnect(TcpClient& client, bool flag){
 		Serial.println("MQTT Broker Disconnected!!");
 	else
 		Serial.println("MQTT Broker Unreachable!!");
-
+	WifiAccessPoint.enable(true);
 	// Restart connection attempt after few seconds
 	procTimer.initializeMs(10 * 1000, startMqttClient).start(); // every 2 seconds
 }
@@ -343,6 +341,7 @@ void onMessageReceived(String topic, String message)
 	Serial.print(topic);
 	Serial.print(":\r\n\t"); // Pretify alignment for printing
 	Serial.println(message);
+	WifiAccessPoint.enable(false);
 }
 
 // Run MQTT client
@@ -375,7 +374,7 @@ void connectOk()
 //	ntpDemo = new ntpClientDemo();
 	// Run MQTT client
 	startMqttClient();
-
+	WifiAccessPoint.enable(false);
 	// Start publishing loop
 	procTimer.initializeMs(20 * 1000, publishMessage).start(); // every 20 seconds
 }
@@ -384,7 +383,7 @@ void connectOk()
 void connectFail()
 {
 	Serial.println("I'm NOT CONNECTED. Need help :(");
-
+	WifiAccessPoint.enable(true);
 	// .. some you code for device configuration ..
 }
 
